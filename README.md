@@ -9,6 +9,7 @@ A virtual environment (`venv`) has been created using **Python 3.10**, and the f
 
 ```sh
 pip install flask mysql-connector-python pycryptodome qiskit pyqrcode pypng
+```
 
 ### Installed Dependencies
 - **Flask** - For building the backend API.
