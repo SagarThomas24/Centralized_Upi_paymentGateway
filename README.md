@@ -11,6 +11,13 @@ A virtual environment (`venv`) has been created using **Python 3.10**, and the f
 pip install flask mysql-connector-python pycryptodome qiskit pyqrcode pypng
 ```
 
+### First Progress showing how my blcok looks like
+Each block will contain:
+1. Transaction ID → A SHA-256 hash of (UID, MID, Timestamp, Amount).
+2. Previous Block Hash → Links to the last block.
+3. Timestamp → When the transaction was recorded.
+4. Each valid transaction creates a new block (not multiple transactions in one block).
+
 ### Installed Dependencies
 - **Flask** - For building the backend API.
 - **MySQL Connector** - For database interactions.
