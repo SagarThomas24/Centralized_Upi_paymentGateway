@@ -10,6 +10,36 @@ A virtual environment (`venv`) has been created using **Python 3.10**, and the f
 ```sh
 pip install flask mysql-connector-python pycryptodome qiskit pyqrcode pypng
 ```
+### 1. Merchant Registration
+
+Merchants register with a bank by providing:
+
+- **Name**  
+- **IFSC Code**  
+- **Password**  
+- **Initial deposit amount**  
+
+The bank generates a **16-digit Merchant ID (MID)** as the merchant's account number.
+
+MID is created using:
+- **Merchant's Name**  
+- **Account creation time**  
+- **Password hashed using SHA-256**, converted into a **16-digit hexadecimal number**  
+
+**MID is unique and should not be shared.**
+### 2. User Registration
+
+Users register with a bank by providing:
+
+- **Name**  
+- **IFSC Code**  
+- **Password**  
+- **Initial deposit amount**  
+- **PIN** for UPI transactions  
+
+The bank generates a **16-digit User ID (UID)** using the same **SHA-256 hashing method** as MID.  
+
+**Users use UID for transactions.**
 
 ### First Progress showing how my blcok looks like
 Each block will contain:
