@@ -56,16 +56,7 @@ Each block will contain:
 - **PyQRCode & PyPNG** - For generating QR codes in UPI transactions.
 
 ## Next Steps
-1. Implement **Bank Registration & User Registration** with hashed credentials.
-2. Develop **QR Code Generation** for Merchant ID encryption using **LWC**.
-3. Implement **Payment Processing** logic with Blockchain for transaction logging.
-4. Simulate **Shor’s Algorithm** to analyze potential cryptographic vulnerabilities.
-5. Build API endpoints using Flask for user, merchant, and bank interactions.
-6. Integrate MySQL database to store user, merchant, and transaction details securely.
-7. Implement a secure login mechanism for banks and merchants using hashed passwords.
-8. Develop a transaction verification module to ensure data integrity.
-9. Test and optimize cryptographic algorithms for better efficiency.
-10. Prepare API documentation for ease of use and integration.
+
 
 ## Running the Project
 ### Step 1: Activate Virtual Environment
