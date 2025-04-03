@@ -55,7 +55,7 @@
                 ifsc_code: document.getElementById("reg_ifsc").value
             };
 
-            fetch("http://192.168.0.101:5001/register_merchant", {
+            fetch("http://127.0.0.1:5001/register_merchant", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -73,7 +73,7 @@
                 password: document.getElementById("login_password").value
             };
         
-            fetch("http://192.168.0.101:5001/login", {
+            fetch("http://127.0.0.1:5001/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -82,7 +82,7 @@
             .then(result => {
                 if (result.success) {
                     console.log("Login successful, redirecting...");
-                    window.location.href = result.redirect_url;  // Redirect to homepage
+                    window.location.href = result.redirect_url;  
                 } else {
                     document.getElementById("loginMessage").innerText = result.error;
                 }
