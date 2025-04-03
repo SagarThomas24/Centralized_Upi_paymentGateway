@@ -95,7 +95,7 @@
                 if (result.success) {
                     localStorage.setItem("userUID", result.uid);
                     console.log("Login successful, redirecting...");
-                    window.location.href = "http://127.0.0.1:5003/homepage";  // Redirect to home page
+                    window.location.href = "http://127.0.0.1:5003/homepage";  
                 } else {
                     document.getElementById("loginMessage").innerText = result.error;
                 }
