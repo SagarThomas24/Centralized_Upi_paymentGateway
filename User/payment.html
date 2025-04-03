@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .card h2 {
+            text-align: center;
+        }
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Payment Details</h2>
+        <input type="text" id="mmid" class="input-field" placeholder="Enter MMID">
+        <input type="password" id="pin" class="input-field" placeholder="Enter PIN">
+        <input type="number" id="amount" class="input-field" placeholder="Enter Amount">
+        <input type="text" id="vid" class="input-field" placeholder="Enter VID">
+        <button class="button" onclick="confirmPayment()">Confirm Payment</button>
+    </div>
+    
+    <script>
+        function confirmPayment() {
+            let mmid = document.getElementById("mmid").value;
+            let pin = document.getElementById("pin").value;
+            let amount = document.getElementById("amount").value;
+            let vid = document.getElementById("vid").value;
+    
+            if (!mmid || !pin || !amount || !vid) {
+                alert("Please fill in all fields.");
+                return;
+            }
+    
+            fetch("http://localhost:5003/process_payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mmid, pin, amount, vid })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payment Successful!");
+                } else {
+                    alert("Payment Failed: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
