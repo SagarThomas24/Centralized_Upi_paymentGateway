@@ -19,8 +19,6 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
-        }
-        .card h2 {
             text-align: center;
         }
         .input-field {
@@ -43,6 +41,16 @@
         .button:hover {
             background: darkgreen;
         }
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -53,34 +61,53 @@
         <input type="number" id="amount" class="input-field" placeholder="Enter Amount">
         <input type="text" id="vid" class="input-field" placeholder="Enter VID">
         <button class="button" onclick="confirmPayment()">Confirm Payment</button>
+        <p id="message" class="message"></p>
     </div>
     
     <script>
         function confirmPayment() {
-            let mmid = document.getElementById("mmid").value;
-            let pin = document.getElementById("pin").value;
-            let amount = document.getElementById("amount").value;
-            let vid = document.getElementById("vid").value;
-    
-            if (!mmid || !pin || !amount || !vid) {
-                alert("Please fill in all fields.");
+            let mmid = document.getElementById("mmid").value.trim();
+            let pin = document.getElementById("pin").value.trim();
+            let amount = parseFloat(document.getElementById("amount").value);
+            let vid = document.getElementById("vid").value.trim();
+            let messageBox = document.getElementById("message");
+
+            // Clear previous message
+            messageBox.textContent = "";
+            messageBox.className = "message";
+
+            // Validation
+            if (!mmid || !pin || isNaN(amount) || !vid) {
+                messageBox.classList.add("error");
+                messageBox.textContent = "Please fill in all fields correctly.";
                 return;
             }
-    
+
             fetch("http://localhost:5003/process_payment", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mmid, pin, amount, vid })
+                body: JSON.stringify({ 
+                    receiver_mmid: mmid, 
+                    pin: pin, 
+                    amount: amount, 
+                    vid: vid 
+                })
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert("Payment Successful!");
+                if (data.error) {
+                    messageBox.classList.add("error");
+                    messageBox.textContent = "Error: " + data.error;
                 } else {
-                    alert("Payment Failed: " + data.error);
+                    messageBox.classList.add("success");
+                    messageBox.textContent = "Payment successful!";
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                messageBox.classList.add("error");
+                messageBox.textContent = "Failed to process payment. Please try again.";
+                console.error("Error:", error);
+            });
         }
     </script>
 </body>
