@@ -202,44 +202,49 @@ def show_payment_page():
         return render_template('payment.html')
     else:
         return redirect(url_for('home'))
-@app.route('/make_payment', methods=['POST'])
-def make_payment():
-    if 'username' not in session:
-        return jsonify({"error": "Unauthorized"}), 401
-    user_name = session["username"]
-    data = request.json
-    mmid= data.get('mmid')
-    pin= data.get('pin')
-    amount= data.get('amount')
+
+@app.route('/process_payment', methods=['POST'])
+def process_payment():
+    data = request.json  
+    mmid = data.get('receiver_mmid')
+    amount = data.get('amount')
+    pin = data.get('pin')
     vid = data.get('vid')
-    if not all([mmid, pin, amount, vid]):
+
+    
+    if not all([mmid, amount, pin]):
         return jsonify({"error": "Missing required fields"}), 400
+    vid_int = int(vid, 16)
+    #hex_vid = hex(vid_int)[2:].upper()
+    #print(f"VID (hex): {hex_vid}")
+    mid = cipher.decrypt(vid_int)
+    #print(f"Decrypted MID: {hex(mid)[2:].upper()}")
+    mid_hex = hex(mid)[2:].upper()
+    print(f"Decrypted MID (hex): {mid_hex}")
+    amount_int = int(amount)
     
-    sql = "SELECT balance  FROM users WHERE mmid = %s"
-    cursor.execute(sql, (user_name,))
+    
+    sql="SELECT balance FROM users WHERE mmid = %s"
+    cursor.execute(sql, (mmid,))
     result = cursor.fetchone()
-    
     if result:
-        balance = result[0]
-        if balance < amount:
-            return jsonify({"error": "Insufficient balance"}), 400
-        else:
-            new_balance = balance - amount
-            sql = "UPDATE users SET balance = %s WHERE mmid = %s"
-            cursor.execute(sql, (new_balance, user_name))
-            
-            merch_id = cipher.decrypt(vid)
-            sql = "SELECT account_balance FROM merchants WHERE merch_id = %s"
-            cursor.execute(sql, (merch_id,))
-            result = cursor.fetchone()
-            if result:
-                balance = result[0]
-            else:
-                return jsonify({"error": "Merchant not found"}), 404
-            
-            
-            update_sql = "UPDATE merchants SET account_balance = balance + %s WHERE mmid = %s"
-            cursor.execute(update_sql, (amount, merch_id))
+        receiver_balance = result[0]
+    else:
+        return jsonify({"error": "Receiver not found"}), 404
+    
+    if receiver_balance < amount:
+        return jsonify({"error": "Insufficient balance"}), 400
+    
+    update_sql = "UPDATE users SET balance = balance - %s WHERE mmid = %s"
+    cursor.execute(update_sql, (amount_int, mmid))
+    db.commit()
+    update_sql="UPDATE merchants SET account_balance = account_balance + %s WHERE mid = %s"
+    cursor.execute(update_sql, (amount_int, mid_hex))
+    db.commit()
+    
+
+    return jsonify({"message": "Data received successfully!"})
+
             
     
 
